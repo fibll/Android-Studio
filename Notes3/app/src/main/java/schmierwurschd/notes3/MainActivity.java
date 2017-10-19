@@ -31,19 +31,25 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
-        listItems.add("Note " + String.valueOf(counter));
 
+        // get message and show with toast
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(EditActivity.MESSAGE_TITLE);
+        Toast.makeText(this, "send: " + message, Toast.LENGTH_LONG).show();
+
+        // add send title to list
+        listItems.add(message);
     }
 
     public void newNote (View view) {
+        /*
         // new list item
         counter++;
         listItems.add("Note " + String.valueOf(counter));
         adapter.notifyDataSetChanged();
+        */
 
-
-        //Intent intent = new Intent(this, EditActivity.class);
-
-        //startActivity(intent);
+        Intent intent = new Intent(this, EditActivity.class);
+        startActivity(intent);
     }
 }
