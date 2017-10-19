@@ -3,6 +3,7 @@ package schmierwurschd.notes3;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AndroidRuntimeException;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -35,10 +36,12 @@ public class MainActivity extends AppCompatActivity {
         // get message and show with toast
         Intent intent = getIntent();
         String message = intent.getStringExtra(EditActivity.MESSAGE_TITLE);
-        Toast.makeText(this, "send: " + message, Toast.LENGTH_LONG).show();
 
-        // add send title to list
-        listItems.add(message);
+        // if not coming from editActivity
+        if(message != null) {
+            Toast.makeText(this, "send: " + message, Toast.LENGTH_LONG).show();
+            listItems.add(message);
+        }
     }
 
     public void newNote (View view) {
