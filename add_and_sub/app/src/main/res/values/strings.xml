@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">add_and_sub</string>
+    <string name="calculate_Button">Calculate</string>
+    <string name="solution">error</string>
+</resources>

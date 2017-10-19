@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Notes_1</string>
+    <string name="Note_Field">Note</string>
+    <string name="deleteText">Delete</string>
+    <string name="saveText">Save</string>
+    <string name="loadText">Load</string>
+    <string name="textField">Type in some text</string>
+</resources>
