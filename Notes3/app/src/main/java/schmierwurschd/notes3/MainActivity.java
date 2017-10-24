@@ -45,14 +45,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newNote (View view) {
-        /*
+
         // new list item
         counter++;
         listItems.add("Note " + String.valueOf(counter));
         adapter.notifyDataSetChanged();
-        */
 
+        /*
         Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
+        */
     }
 }
