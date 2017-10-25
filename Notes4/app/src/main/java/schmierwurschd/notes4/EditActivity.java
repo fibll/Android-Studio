@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,15 +36,29 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         EditText editText = (EditText) findViewById(R.id.editTextField);
 
+        // add just the first line to item list
+        StringTokenizer stringToken = new StringTokenizer(editText.getText().toString(), "\n");
+        if(stringToken.hasMoreTokens()) {
+            String lineToken = stringToken.nextToken();
+
+            // if string is too big, just take 25 characters
+            if(lineToken.length() > 30) {
+                lineToken = lineToken.substring(0, 30);
+                lineToken += "...";
+            }
+
+            listItems.add(lineToken);
+        }
+
+        /*
         // add new text to items list
         if(!editText.getText().toString().isEmpty()) {
             listItems.add(editText.getText().toString());
         }
+        */
 
         // move list into one ';' seperated string;
         String outputString = getTokenStringFromList();
-
-        Toast.makeText(getBaseContext(), outputString, Toast.LENGTH_SHORT).show();
 
         // write item into item file
         writeToFile(outputString, "items.txt");
@@ -78,7 +90,7 @@ public class EditActivity extends AppCompatActivity {
         // create StringTokenizer with delimiter ";"
         StringTokenizer stringToken = new StringTokenizer(input, ";");
 
-        if(!stringToken.hasMoreElements())
+        if(!stringToken.hasMoreTokens())
         {
             return 1;
         }
