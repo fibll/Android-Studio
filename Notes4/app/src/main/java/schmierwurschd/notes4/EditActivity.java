@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,7 +26,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         // read in from file
-        String inputFromFile = readFromFile("items.txt");
+        String inputFromFile = readFromFile("titels.data");
 
         // get list out of fileOutput
         getListFromInput(inputFromFile);
@@ -35,33 +36,32 @@ public class EditActivity extends AppCompatActivity {
         // create intent to main activity
         Intent intent = new Intent(this, MainActivity.class);
         EditText editText = (EditText) findViewById(R.id.editTextField);
+        String noteTitle;
+        String noteTitleFileName;
 
-        // add just the first line to item list
+        // add just the first line to item list, and if the note is not empty
         StringTokenizer stringToken = new StringTokenizer(editText.getText().toString(), "\n");
         if(stringToken.hasMoreTokens()) {
-            String lineToken = stringToken.nextToken();
+            noteTitle = stringToken.nextToken();
 
             // if string is too big, just take 25 characters
-            if(lineToken.length() > 30) {
-                lineToken = lineToken.substring(0, 30);
-                lineToken += "...";
+            if(noteTitle.length() > 30) {
+                // the 3 dots should not be in the file name
+                noteTitleFileName = noteTitle.substring(0, 30);
+                noteTitle = noteTitleFileName + "...";
             }
 
-            listItems.add(lineToken);
+            listItems.add(noteTitle);
+
+            // move list into one ';' separated string;
+            String outputString = getTokenStringFromList();
+
+            // write title into title file
+            writeToFile(outputString, "titels.data");
+
+            // write note into note file
+            writeToFile(editText.getText().toString(), noteTitle + ".note");
         }
-
-        /*
-        // add new text to items list
-        if(!editText.getText().toString().isEmpty()) {
-            listItems.add(editText.getText().toString());
-        }
-        */
-
-        // move list into one ';' seperated string;
-        String outputString = getTokenStringFromList();
-
-        // write item into item file
-        writeToFile(outputString, "items.txt");
 
         // jump to main activity
         startActivity(intent);
@@ -144,7 +144,7 @@ public class EditActivity extends AppCompatActivity {
         try {
             // create output stream and output writer
             FileOutputStream fileOut = openFileOutput(fileName, MODE_PRIVATE);
-            OutputStreamWriter outputWriter=new OutputStreamWriter(fileOut);
+            OutputStreamWriter outputWriter = new OutputStreamWriter(fileOut);
 
             // write into file
             outputWriter.write(input);

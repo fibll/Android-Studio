@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -36,10 +37,30 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         // read in from file
-        String inputFromFile = readFromFile("items.txt");
+        String inputFromFile = readFromFile("titels.data");
 
         // get list out of fileOutput
-        getListFromInput(inputFromFile);
+        if(!inputFromFile.equals("error")) {
+            getListFromInput(inputFromFile);
+        }
+
+        // initialize the item click listener
+        listView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        String noteTitle = String.valueOf(adapterView.getItemAtPosition(position));
+                        // if title got 3 points in = substring with 30 characters
+                        if(noteTitle.length() >= 33) {
+                            noteTitle = noteTitle.substring(0, 30);
+                        }
+
+                        Intent intent = new Intent(MainActivity.this, EditActivity.class);
+
+                    }
+                }
+        );
     }
 
     public void newNote(View view) {
