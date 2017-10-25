@@ -3,14 +3,18 @@ package schmierwurschd.notes4;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,13 +35,49 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
 
-        // get list items out of list file
+        String inputFromFile = readFromFile("items.txt");
+
+        // get list out of fileOutput
+        getListFromInput(inputFromFile);
+    }
+
+    public void newNote(View view) {
+
+        // create intent to edit Activity
+        Intent intent = new Intent(this, EditActivity.class);
+
+        // jump to edit Activity
+        startActivity(intent);
+
+    }
+
+    public int getListFromInput(String input)
+    {
+        // create StringTokenizer with delimiter ";"
+        StringTokenizer strtok = new StringTokenizer(input, ";");
+
+        if(!strtok.hasMoreElements())
+        {
+            return 1;
+        }
+
+        // get all the tokens out of input
+        while (strtok.hasMoreTokens()) {
+            // add next token to list
+            listItems.add(strtok.nextToken());
+        }
+
+        return 0;
+    }
+
+    public String readFromFile(String fileName){
+        // get list fileContent out of list file
         try {
             // string that contains characters of file
-            String items = "";
+            String fileContent = "";
 
             // file input stream and stream reader
-            FileInputStream fileIn = openFileInput("items.txt");
+            FileInputStream fileIn = openFileInput(fileName);
             InputStreamReader InputRead = new InputStreamReader(fileIn);
 
             // create input buffer and read char counter
@@ -49,30 +89,42 @@ public class MainActivity extends AppCompatActivity {
 
                 // char to string conversion
                 String readstring = String.copyValueOf(inputBuffer, 0, charRead);
-                items += readstring;
+                fileContent += readstring;
             }
             InputRead.close();
 
-            // add items to list
-            // TO CHANGE
-            listItems.add(items);
+            //display data of file
+            // Toast.makeText(getBaseContext(), fileContent, Toast.LENGTH_SHORT).show();
 
-            //display data of items.txt
-            // Toast.makeText(getBaseContext(), items, Toast.LENGTH_SHORT).show();
-
+            return fileContent;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return "error";
         }
     }
 
-    public void newNote(View view) {
+    public int writeToFile(String input, String fileName) {
+        // write item into item file
+        try {
+            // create output stream and output writer
+            FileOutputStream fileOut = openFileOutput(fileName, MODE_PRIVATE);
+            OutputStreamWriter outputWriter=new OutputStreamWriter(fileOut);
 
-        // create intent to edit Activity
-        Intent intent = new Intent(this, EditActivity.class);
+            // write into file
+            outputWriter.write(input);
 
-        // jump to edit Activity
-        startActivity(intent);
+            // close file
+            outputWriter.close();
 
+            //display file saved message
+            //Toast.makeText(getBaseContext(), "File saved successfully!", Toast.LENGTH_SHORT).show();
+
+            return 0;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
     }
 }
