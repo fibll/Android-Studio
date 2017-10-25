@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listView.setAdapter(adapter);
 
+        // read in from file
         String inputFromFile = readFromFile("items.txt");
 
         // get list out of fileOutput
@@ -54,17 +55,18 @@ public class MainActivity extends AppCompatActivity {
     public int getListFromInput(String input)
     {
         // create StringTokenizer with delimiter ";"
-        StringTokenizer strtok = new StringTokenizer(input, ";");
+        StringTokenizer stringToken = new StringTokenizer(input, ";");
 
-        if(!strtok.hasMoreElements())
+        if(!stringToken.hasMoreElements())
         {
             return 1;
         }
 
         // get all the tokens out of input
-        while (strtok.hasMoreTokens()) {
+        while (stringToken.hasMoreTokens()) {
+
             // add next token to list
-            listItems.add(strtok.nextToken());
+            listItems.add(stringToken.nextToken());
         }
 
         return 0;

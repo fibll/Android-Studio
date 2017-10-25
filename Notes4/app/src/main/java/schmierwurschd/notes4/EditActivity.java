@@ -12,14 +12,25 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class EditActivity extends AppCompatActivity {
+
+    // variables
+    // list
+    private ArrayList<String> listItems = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        // read in from file
+        String inputFromFile = readFromFile("items.txt");
+
+        // get list out of fileOutput
+        getListFromInput(inputFromFile);
     }
 
     public void saveNote(View view) {
@@ -27,11 +38,59 @@ public class EditActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         EditText editText = (EditText) findViewById(R.id.editTextField);
 
+        // add new text to items list
+        if(!editText.getText().toString().isEmpty()) {
+            listItems.add(editText.getText().toString());
+        }
+
+        // move list into one ';' seperated string;
+        String outputString = getTokenStringFromList();
+
+        Toast.makeText(getBaseContext(), outputString, Toast.LENGTH_SHORT).show();
+
         // write item into item file
-        writeToFile(editText.getText().toString(), "items.txt");
+        writeToFile(outputString, "items.txt");
 
         // jump to main activity
         startActivity(intent);
+    }
+
+    public String getTokenStringFromList() {
+        String tokenString = "";
+        int index = 0;
+
+        // return with error if string is empty
+        if(listItems.isEmpty()) {
+            return "error";
+        }
+
+        // go through list and put all items to one string
+        while(index < listItems.size()) {
+            tokenString += listItems.get(index) + ";";
+            index++;
+        }
+
+        return tokenString;
+    }
+
+    public int getListFromInput(String input)
+    {
+        // create StringTokenizer with delimiter ";"
+        StringTokenizer stringToken = new StringTokenizer(input, ";");
+
+        if(!stringToken.hasMoreElements())
+        {
+            return 1;
+        }
+
+        // get all the tokens out of input
+        while (stringToken.hasMoreTokens()) {
+
+            // add next token to list
+            listItems.add(stringToken.nextToken());
+        }
+
+        return 0;
     }
 
     public String readFromFile(String fileName){
