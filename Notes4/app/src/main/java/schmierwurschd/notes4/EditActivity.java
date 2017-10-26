@@ -51,7 +51,7 @@ public class EditActivity extends AppCompatActivity {
                 noteTitle = noteTitleFileName + "...";
             }
 
-            listItems.add(noteTitle);
+            listItems.add(0, noteTitle);
 
             // move list into one ';' separated string;
             String outputString = getTokenStringFromList();
