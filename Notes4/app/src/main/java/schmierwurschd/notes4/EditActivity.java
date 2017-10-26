@@ -19,17 +19,31 @@ public class EditActivity extends AppCompatActivity {
     // variables
     // list
     private ArrayList<String> listItems = new ArrayList<String>();
+    private int oldNote = 0;
+    private int itemPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        // read in from file
+        // get list out of list file
         String inputFromFile = readFromFile("titels.data");
-
-        // get list out of fileOutput
         getListFromInput(inputFromFile);
+
+        // get intent
+        Intent intent = getIntent();
+        String noteTitle = intent.getStringExtra(MainActivity.MESSAGE_TITLE);
+        itemPosition = intent.getIntExtra(MainActivity.MESSAGE_INDEX, -1);
+
+        if(noteTitle != null)
+        {
+            // load note file with the given title
+            EditText editText = (EditText) findViewById(R.id.editTextField);
+            String noteText = readFromFile(noteTitle + ".note");
+            editText.setText(noteText);
+            oldNote = 1;
+        }
     }
 
     public void saveNote(View view) {
@@ -51,6 +65,12 @@ public class EditActivity extends AppCompatActivity {
                 noteTitle = noteTitleFileName + "...";
             }
 
+            // if old note, delete old item out of item list
+            if(oldNote > 0) {
+                listItems.remove(itemPosition);
+            }
+
+            // add the new title to the beginning
             listItems.add(0, noteTitle);
 
             // move list into one ';' separated string;
@@ -73,7 +93,7 @@ public class EditActivity extends AppCompatActivity {
 
         // return with error if string is empty
         if(listItems.isEmpty()) {
-            return "error";
+            return "error_getTokenStringFromList";
         }
 
         // go through list and put all items to one string
@@ -135,7 +155,7 @@ public class EditActivity extends AppCompatActivity {
         }
         catch (Exception e) {
             e.printStackTrace();
-            return "error";
+            return "error_readFromFile";
         }
     }
 

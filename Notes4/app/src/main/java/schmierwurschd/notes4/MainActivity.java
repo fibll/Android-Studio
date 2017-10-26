@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> listItems = new ArrayList<String>();
     private ArrayAdapter adapter;
     private ListView listView;
+    public static final String MESSAGE_TITLE = "MESSAGE_TITLE";
+    public static final String MESSAGE_INDEX = "MESSAGE_TITLE_INDEX";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         String inputFromFile = readFromFile("titels.data");
 
         // get list out of fileOutput
-        if(!inputFromFile.equals("error")) {
+        if(!inputFromFile.equals("error_readFromFile")) {
             getListFromInput(inputFromFile);
         }
 
@@ -57,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         Intent intent = new Intent(MainActivity.this, EditActivity.class);
-
+                        intent.putExtra(MESSAGE_TITLE, noteTitle);
+                        intent.putExtra(MESSAGE_INDEX, position);
+                        startActivity(intent);
                     }
                 }
         );
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e) {
             e.printStackTrace();
-            return "error";
+            return "error_readFromFile";
         }
     }
 
